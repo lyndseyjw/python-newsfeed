@@ -1,6 +1,8 @@
 from flask import Flask
 from app.routes.home import bp as home
 from app.routes.dashboard import bp as dashboard
+from app.db import init_db
+from app.utils import filters
 
 def create_app(test_config=None):
   # set up app config
@@ -13,6 +15,10 @@ def create_app(test_config=None):
     SECRET_KEY='super_secret_key'
   )
 
+  app.jinja_env.filters['format_url'] = filters.format_url
+  app.jinja_env.filters['format_date'] = filters.format_date
+  app.jinja_env.filters['format_plural'] = filters.format_plural
+
   # same as app.get('/hello', (req, res) => {
   #     res.send('hello world');
   # });
@@ -24,5 +30,9 @@ def create_app(test_config=None):
   # register routes
   app.register_blueprint(home)
   app.register_blueprint(dashboard)
+  
+  # passing in the app context variable when we intialize the connection to the db
+  # how we ensure connections will not remain open and potentially locking up the server
+  init_db(app)
 
   return app
