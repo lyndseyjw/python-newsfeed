@@ -5,7 +5,7 @@ from app.db import get_db
 # corresponds to Router middleware of Express.js
 bp = Blueprint('home', __name__, url_prefix='/')
 
-# this decorator turns the function into a route
+# this decorator turns the function into a route (the @ defines as decorator) .. decorators are like JS callback functions
 @bp.route('/')
 def index():
   # get all posts
